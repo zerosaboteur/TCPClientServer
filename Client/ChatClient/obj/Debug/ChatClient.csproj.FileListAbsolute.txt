@@ -10,3 +10,15 @@ C:\Users\Lukasz\source\repos\ChatClient\ChatClient\obj\Debug\ChatClient.exe
 C:\Users\Lukasz\source\repos\ChatClient\ChatClient\obj\Debug\ChatClient.pdb
 C:\Users\Lukasz\source\repos\ChatClient\ChatClient\obj\Debug\ChatClient.Aplikacja.resources
 C:\Users\Lukasz\source\repos\ChatClient\ChatClient\obj\Debug\ChatClient.HackerMan.resources
+E:\Projekty\ChatClient\Client\ChatClient\bin\Debug\ChatClient.exe.config
+E:\Projekty\ChatClient\Client\ChatClient\bin\Debug\ChatClient.exe
+E:\Projekty\ChatClient\Client\ChatClient\bin\Debug\ChatClient.pdb
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.csprojResolveAssemblyReference.cache
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.Aplikacja.resources
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.Form1.resources
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.HackerMan.resources
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.Properties.Resources.resources
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.csproj.GenerateResource.Cache
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.csproj.CoreCompileInputs.cache
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.exe
+E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.pdb

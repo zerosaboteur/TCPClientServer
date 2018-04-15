@@ -20,6 +20,7 @@ namespace ChatClient
         public string adres = Form1.adres;
         public string port = Form1.port;
 
+        public string zaptxt;
         public string recieve;
         public String TextToSend;
 
@@ -32,8 +33,6 @@ namespace ChatClient
 
         public Aplikacja()
         {
-            MessageBox.Show("" + adres);
-            MessageBox.Show("" + port);
             InitializeComponent();
 
             sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -51,7 +50,8 @@ namespace ChatClient
 
                 if (client.Connected)
                 {
-                    ChatBox.AppendText("Connected to server" + "\n");
+                    label2.Text = "Połączony";
+                    label2.ForeColor = System.Drawing.Color.Green;
                 }
             }
             catch (Exception ex)
@@ -66,27 +66,52 @@ namespace ChatClient
             byte[] msg = new byte[1500];
             msg = enc.GetBytes(PoleWiadomosc.Text);
             sck.Send(msg);
+            zaptxt = PoleWiadomosc.Text;
+            MessageBox.Show("" + zaptxt);
             PoleWiadomosc.Clear();
         }
         public void receiveCallback(IAsyncResult asyncReceive)
         {
-
-            byte[] rec = new byte[client.ReceiveBufferSize];
-            client.Client.Receive(rec);
-            string temp = Encoding.UTF8.GetString(rec);
-
-
-            temp = Encoding.Unicode.GetString(rec);
-            this.Invoke((MethodInvoker)delegate
+            try
             {
-                OknoChat.Items.Add("Friend: " + temp);
-            });
-            sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
-        }
+                byte[] rec = new byte[client.ReceiveBufferSize];
+                client.Client.Receive(rec);
+                string temp = Encoding.ASCII.GetString(rec); ;
+                
+                temp = temp.Trim('\0');
 
-        private void button1_Click(object sender, EventArgs e)
+                MessageBox.Show("" + temp);
+                this.Invoke((MethodInvoker)delegate
+                {
+                    if (zaptxt != temp)
+                    {
+                        OknoChat.Items.Add("Znajomy: " + temp);
+                    }
+                    else
+                        OknoChat.Items.Add("Ty: " + temp);
+                });
+                sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+            }
+            catch
+            {
+
+            }
+         }
+
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            sck.Disconnect(true);
+            try
+            {
+                client.GetStream().Close();
+                client.Close();
+                sck.Shutdown(SocketShutdown.Both);
+                sck.Disconnect(true);
+                this.Close();
+            }
+            catch
+            {
+                this.Close();
+            }
         }
     }
 }
