@@ -15,18 +15,20 @@ namespace ChatClient
 {
     public partial class Aplikacja : Form
     {
+        private TcpClient client;
 
         public string adres = Form1.adres;
         public string port = Form1.port;
 
-        private TcpClient client;
-        public StreamReader STR;
-        public StreamWriter STW;
         public string recieve;
         public String TextToSend;
 
         public Socket sck;
         EndPoint IpEnd;
+        EndPoint epSender;
+
+        byte[] bytes = new byte[256];
+        byte[] buffer = new byte[1500];
 
         public Aplikacja()
         {
@@ -35,60 +37,56 @@ namespace ChatClient
             InitializeComponent();
 
             sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sck.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             try
             {
                 client = new TcpClient();
-                EndPoint IpEnd = new IPEndPoint(IPAddress.Parse(adres), int.Parse(port));
+                IpEnd = new IPEndPoint(IPAddress.Parse(adres), int.Parse(port));
 
+                epSender = (EndPoint)IpEnd;
+
+                client.Connect(IPAddress.Parse(adres), int.Parse(port));
                 sck.Connect(IpEnd);
-                byte[] buffer = new byte[1500]; sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref IpEnd, new AsyncCallback(MessageCallBack), buffer);
-            
+
+                sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+
                 if (client.Connected)
-                    {
+                {
                     ChatBox.AppendText("Connected to server" + "\n");
-                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
             }
         }
-        
+
         private void Wyslij_Click(object sender, EventArgs e)
         {
-            try {
-                System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-                byte[] msg = new byte[1500];
-                msg = enc.GetBytes(PoleWiadomosc.Text); sck.Send(msg);
-                OknoChat.Items.Add("You: " + PoleWiadomosc.Text);
-                PoleWiadomosc.Clear();
-            }
-            catch (Exception ex)
+            System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+            byte[] msg = new byte[1500];
+            msg = enc.GetBytes(PoleWiadomosc.Text);
+            sck.Send(msg);
+            PoleWiadomosc.Clear();
+        }
+        public void receiveCallback(IAsyncResult asyncReceive)
+        {
+
+            byte[] rec = new byte[client.ReceiveBufferSize];
+            client.Client.Receive(rec);
+            string temp = Encoding.UTF8.GetString(rec);
+
+
+            temp = Encoding.Unicode.GetString(rec);
+            this.Invoke((MethodInvoker)delegate
             {
-                MessageBox.Show(ex.ToString());
-            }
+                OknoChat.Items.Add("Friend: " + temp);
+            });
+            sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
         }
 
-        private void MessageCallBack(IAsyncResult aResult)
+        private void button1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                int size = sck.EndReceiveFrom(aResult, ref IpEnd);
-                if (size > 0)
-                {
-                    byte[] receivedData = new byte[1464];
-                    receivedData = (byte[])aResult.AsyncState;
-                    ASCIIEncoding eEncoding = new ASCIIEncoding();
-                    string receivedMessage = eEncoding.GetString(receivedData);
-                    OknoChat.Items.Add("Friend: " + receivedMessage);
-                }
-                byte[] buffer = new byte[1500];
-                sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref IpEnd, new AsyncCallback(MessageCallBack), buffer);
-            }
-            catch (Exception exp)
-            { MessageBox.Show(exp.ToString());
-            }
+            sck.Disconnect(true);
         }
     }
 }
