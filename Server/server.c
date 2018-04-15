@@ -1,118 +1,142 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <stdio.h>
 #include <netinet/in.h>
-#include <string.h>
 #include <arpa/inet.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include<sys/wait.h>
 
+#define PORT 5000
 
-int main(void) {
-//delkaracja zmiennych
- unsigned int port;
- char bufor[1024];
- int gniazdo, gniazdo2,nowegniazdo;
- struct sockaddr_in adr, nadawca;
- socklen_t dl = sizeof(struct sockaddr_in);
- char wiadomosc[1024];
-int clients[2];
-int i,s;
-i=0;
-s=0;
- int n,pid;
-size_t iloscclientow;
-
-
-// Czesc odpowowiadajaca za sam server
- printf("Na ktorym porcie mam sluchac? : ");
- scanf("%u", &port);
- gniazdo = socket(PF_INET, SOCK_STREAM, 0);
- adr.sin_family = AF_INET;
- adr.sin_port = htons(port);
- adr.sin_addr.s_addr = INADDR_ANY;
- if (bind(gniazdo, (struct sockaddr*) &adr, 
- sizeof(adr)) < 0) {
- printf("Bind nie powiodl sie.\n");
- return 1;
- }
- if (listen(gniazdo, 10) < 0) {
- printf("Listen nie powiodl sie.\n");
- return 1; 
- }
-
- //laczenie z klientami
- printf("Czekam na polaczenie ...\n");
- while (i<2) 
+int main(int argc, char *argv[])
  {
-	nowegniazdo = accept(gniazdo, (struct sockaddr*) &nadawca,&dl);
-	clients[i] = nowegniazdo;
+	fd_set glowny_fd_set, inne_fd_set;
+	struct sockaddr_in adres_servera,adres_klienta;
+	int najwiekszy_fd, listener, nowy_fd, dl_adresu, wiadomosc, i, j;
+	char buf[1024];
+	int yes=1;
 	
-	if (nowegniazdo < 0)
+	FD_ZERO(&glowny_fd_set);
+	FD_ZERO(&inne_fd_set);
+	
+	if((listener = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
-		perror("Error na akcept");
+		perror("Socketowanie servera nie powiodlo sie");
 		exit(1);
 	}
-	printf("Klient nr: %d, polaczony.\n",clients[i]);
-	i++;
-// forkowanie
- }
-printf("polaczeni z serverem.\n");
-i=0;
-while(1)
-{
-		pid=fork();
-		if (pid<0)
+	else
+	{
+		printf("Socketowanie servera udane\n");
+	}
+	
+	if (setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
+	{
+		perror("Ustawianie socketa-servera nie wyszlo");
+		exit(1);
+	}
+	else
+	{
+		printf("Server socket gotowy\n");
+	}
+
+	adres_servera.sin_family = AF_INET;
+	adres_servera.sin_addr.s_addr = INADDR_ANY;
+	adres_servera.sin_port = htons(PORT);
+	memset(&(adres_servera.sin_zero), '\0', 8);
+	
+	if (bind(listener,(struct sockaddr *)&adres_servera,sizeof(adres_servera)) == -1)
+	{
+		perror("Bind servera nieudany");
+		exit(1);
+	}
+	else
+	{
+		printf("Bindowanie udane\n");
+	}
+
+	if(listen(listener,10) == -1)
+	{
+		perror("LIsten servera nieudany");
+		exit(1);
+	}
+	else
+	{
+		printf("Listen servera udany\n");
+	}
+	FD_SET(listener, &glowny_fd_set);
+	najwiekszy_fd = listener;
+
+ 
+	for(;;)
+	{
+		inne_fd_set = glowny_fd_set;
+		
+		if(select(najwiekszy_fd + 1, &inne_fd_set, NULL, NULL, NULL) == -1)
 		{
-			perror("Error z frokiem");
-		}
-		if (pid == 0)
-		{
-				close(gniazdo);
-				 memset(bufor, 0, 1024);
-				 recv(clients[i], bufor, 1024, 0);
-				 printf("Wiadomosc od %s: %s\n",
-				 inet_ntoa(nadawca.sin_addr),
-				 bufor);
-				if (i == 0)
-				{
-					 if ((send(clients[i+1],bufor, strlen(bufor),0))== -1) 
-					 {
-					                     fprintf(stderr, "Failure Sending Message for client %d\n",clients[i+1]);
-								printf("Buffor: %s",bufor);
-					                     close(clients[i+1]);
-					                     break;
-			          	 }
-					printf("Wiadomosc wyslana: %s\nNumber of bytes sent: %d\n",bufor,
-			 		strlen(bufor));
-				 }
-				else
-				{
-					if ((send(clients[i-1],bufor, strlen(bufor),0))== -1) 
-					 {
-					                     fprintf(stderr, "Failure Sending Message for client %d\n",clients[i-1]);
-								printf("Buffor: %s",bufor);
-					                     close(clients[i-1]);
-					                     break;
-			          	 }
-					printf("Wiadomosc wyslana: %s\nNumber of bytes sent: %d\n",bufor,
-			 		strlen(bufor));
-				}
-				exit(0);
-		}
-		else
-		{
-			wait(NULL);
-	 		//close(nowegniazdo);
-		}
-		i++;
-		if(i>1)
-		{
-			i=0;
+			perror("Nieudany select()");
+			exit(1);
 		}
 
-}
- close(gniazdo); 
- return 0; 
+		printf("select() udany\n");
+		
+		for(i=0;i<=najwiekszy_fd;i++)
+		{
+			if(FD_ISSET(i,&inne_fd_set))
+			{
+				if(i == listener)
+				{
+					dl_adresu = sizeof(adres_klienta);
+					if ((nowy_fd = accept(listener,(struct sockaddr *)&adres_klienta, &dl_adresu))==-1)
+					{
+						perror("Brak akceptacji");
+					}
+					else
+					{
+						printf("Zaakceptowane\n");
+						printf("Wielkosc najnowszego deskryptora: %d\n",nowy_fd);
+						FD_SET(nowy_fd, &glowny_fd_set);
+
+						printf("Wielkosc najwiekszego deskryptora: %d\n",najwiekszy_fd);
+						printf("Wielkosc najnowszego deskryptora: %d\n",nowy_fd);
+
+						if(nowy_fd > najwiekszy_fd)
+						{
+							najwiekszy_fd = nowy_fd;
+						}
+						printf("Nowe polaczenie od %s na sockecie %d\n", inet_ntoa(adres_klienta.sin_addr),nowy_fd);
+					}
+				}
+				else
+				{
+					if((wiadomosc = recv(i,buf,sizeof(buf),0))  <= 0)
+					{
+						if(wiadomosc == 0)
+							printf("Klient %d sie rozloczyl.\n",i);
+					
+						else
+							perror("Blad odbioru wiadomosci\n");
+						
+						close(i);
+						FD_CLR(i,&glowny_fd_set);
+					}
+					else
+					{
+						for(j=0;j<=najwiekszy_fd; j++)
+						{
+							if(FD_ISSET(j,&glowny_fd_set))
+							{
+								if(j != listener && j != i)
+								{
+									if(send(j,buf,wiadomosc,0) == -1)
+										perror("Send nieudany");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+return 0;
 }
