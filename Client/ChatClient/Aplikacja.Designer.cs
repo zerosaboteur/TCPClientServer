@@ -29,13 +29,15 @@
         private void InitializeComponent()
         {
             this.PoleWiadomosc = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.OknoObrazka = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Wyslij = new System.Windows.Forms.Button();
             this.OknoChat = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.PicSendBut = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            ((System.ComponentModel.ISupportInitialize)(this.OknoObrazka)).BeginInit();
             this.SuspendLayout();
             // 
             // PoleWiadomosc
@@ -45,13 +47,13 @@
             this.PoleWiadomosc.Size = new System.Drawing.Size(503, 20);
             this.PoleWiadomosc.TabIndex = 0;
             // 
-            // pictureBox1
+            // OknoObrazka
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(544, 29);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(198, 299);
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            this.OknoObrazka.Location = new System.Drawing.Point(544, 29);
+            this.OknoObrazka.Name = "OknoObrazka";
+            this.OknoObrazka.Size = new System.Drawing.Size(198, 299);
+            this.OknoObrazka.TabIndex = 1;
+            this.OknoObrazka.TabStop = false;
             // 
             // label1
             // 
@@ -100,21 +102,36 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // PicSendBut
+            // 
+            this.PicSendBut.Location = new System.Drawing.Point(545, 336);
+            this.PicSendBut.Name = "PicSendBut";
+            this.PicSendBut.Size = new System.Drawing.Size(86, 23);
+            this.PicSendBut.TabIndex = 8;
+            this.PicSendBut.Text = "Wyślij zdjęcie";
+            this.PicSendBut.UseVisualStyleBackColor = true;
+            this.PicSendBut.Click += new System.EventHandler(this.PicSendBut_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Aplikacja
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 442);
+            this.Controls.Add(this.PicSendBut);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.OknoChat);
             this.Controls.Add(this.Wyslij);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.OknoObrazka);
             this.Controls.Add(this.PoleWiadomosc);
             this.Name = "Aplikacja";
             this.Text = "Aplikacja";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.OknoObrazka)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,11 +140,13 @@
         #endregion
 
         private System.Windows.Forms.TextBox PoleWiadomosc;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox OknoObrazka;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Wyslij;
         private System.Windows.Forms.ListBox OknoChat;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button PicSendBut;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
@@ -24,18 +24,17 @@ namespace ChatClient
         public string recieve;
         public String TextToSend;
 
-        public Socket sck;
+       // public Socket sck;
         EndPoint IpEnd;
         EndPoint epSender;
-
-        byte[] bytes = new byte[256];
+        
         byte[] buffer = new byte[1500];
 
         public Aplikacja()
         {
             InitializeComponent();
 
-            sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
                 client = new TcpClient();
@@ -44,9 +43,11 @@ namespace ChatClient
                 epSender = (EndPoint)IpEnd;
 
                 client.Connect(IPAddress.Parse(adres), int.Parse(port));
-                sck.Connect(IpEnd);
+                //sck.Connect(IpEnd);
 
-                sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+                //client.Client.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+                Thread sluchanie = new Thread(receiveCallback);
+                sluchanie.Start();
 
                 if (client.Connected)
                 {
@@ -65,32 +66,41 @@ namespace ChatClient
             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
             byte[] msg = new byte[1500];
             msg = enc.GetBytes(PoleWiadomosc.Text);
-            sck.Send(msg);
+            client.Client.Send(msg);
             zaptxt = PoleWiadomosc.Text;
             MessageBox.Show("" + zaptxt);
             PoleWiadomosc.Clear();
+            OknoChat.Items.Add("Ty: " + zaptxt);
+
         }
-        public void receiveCallback(IAsyncResult asyncReceive)
+        public void receiveCallback()
         {
             try
             {
                 byte[] rec = new byte[client.ReceiveBufferSize];
                 client.Client.Receive(rec);
-                string temp = Encoding.ASCII.GetString(rec); ;
-                
-                temp = temp.Trim('\0');
+                string temp = Encoding.UTF8.GetString(rec);
 
                 MessageBox.Show("" + temp);
-                this.Invoke((MethodInvoker)delegate
+                if (temp.Contains("PNG"))
                 {
-                    if (zaptxt != temp)
+                    File.WriteAllBytes("E:\\Projekty\\img.png", rec);
+                    OknoObrazka.SizeMode = PictureBoxSizeMode.Zoom;
+                    OknoObrazka.ImageLocation = "E:\\Projekty\\img.png";
+                }
+                else
+                {
+                    temp = Encoding.ASCII.GetString(rec);
+                    temp = temp.Trim('\0');
+
+                    this.Invoke((MethodInvoker)delegate
                     {
-                        OknoChat.Items.Add("Znajomy: " + temp);
-                    }
-                    else
-                        OknoChat.Items.Add("Ty: " + temp);
-                });
-                sck.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+                            OknoChat.Items.Add("Znajomy: " + temp);
+                    });
+                }
+                //client.Client.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+                Thread.Sleep(100);
+                receiveCallback();
             }
             catch
             {
@@ -104,13 +114,34 @@ namespace ChatClient
             {
                 client.GetStream().Close();
                 client.Close();
-                sck.Shutdown(SocketShutdown.Both);
-                sck.Disconnect(true);
                 this.Close();
             }
             catch
             {
                 this.Close();
+            }
+        }
+
+        private void PicSendBut_Click(object sender, EventArgs e)
+        {
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string image_to_send = openFileDialog1.FileName;
+                try
+                {
+                    if (image_to_send.Contains(".png"))
+                    {
+                        client.Client.SendFile(image_to_send);
+                    }
+                    else
+                    {
+                        MessageBox.Show("To nie jest obrazek PNG");
+                    }
+                }
+                catch (IOException)
+                {
+                }
             }
         }
     }
