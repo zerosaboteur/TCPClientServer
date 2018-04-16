@@ -28,7 +28,7 @@ namespace ChatClient
         EndPoint IpEnd;
         EndPoint epSender;
         
-        byte[] buffer = new byte[1500];
+        byte[] buffer = new byte[4128];
 
         public Aplikacja()
         {
@@ -45,6 +45,7 @@ namespace ChatClient
                 client.Connect(IPAddress.Parse(adres), int.Parse(port));
                 //sck.Connect(IpEnd);
 
+                client.ReceiveBufferSize = 2000000;
                 //client.Client.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
                 Thread sluchanie = new Thread(receiveCallback);
                 sluchanie.Start();
@@ -77,9 +78,10 @@ namespace ChatClient
         {
             try
             {
+                Thread.Sleep(60000);
                 byte[] rec = new byte[client.ReceiveBufferSize];
                 client.Client.Receive(rec);
-                string temp = Encoding.UTF8.GetString(rec);
+                string temp = Encoding.ASCII.GetString(rec);
 
                 MessageBox.Show("" + temp);
                 if (temp.Contains("PNG"))
@@ -133,6 +135,8 @@ namespace ChatClient
                     if (image_to_send.Contains(".png"))
                     {
                         client.Client.SendFile(image_to_send);
+                        OknoObrazka.SizeMode = PictureBoxSizeMode.Zoom;
+                        OknoObrazka.ImageLocation = image_to_send;
                     }
                     else
                     {
