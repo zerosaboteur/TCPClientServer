@@ -7,14 +7,14 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 5000
+#define PORT 11114
 
 int main(int argc, char *argv[])
  {
 	fd_set glowny_fd_set, inne_fd_set;
 	struct sockaddr_in adres_servera,adres_klienta;
 	int najwiekszy_fd, listener, nowy_fd, dl_adresu, wiadomosc, i, j;
-	char buf[1024];
+	char buf[1000000];
 	int yes=1;
 	
 	FD_ZERO(&glowny_fd_set);
