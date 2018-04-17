@@ -42,7 +42,7 @@
             // 
             // PoleWiadomosc
             // 
-            this.PoleWiadomosc.Location = new System.Drawing.Point(12, 410);
+            this.PoleWiadomosc.Location = new System.Drawing.Point(12, 339);
             this.PoleWiadomosc.Name = "PoleWiadomosc";
             this.PoleWiadomosc.Size = new System.Drawing.Size(503, 20);
             this.PoleWiadomosc.TabIndex = 0;
@@ -66,9 +66,9 @@
             // 
             // Wyslij
             // 
-            this.Wyslij.Location = new System.Drawing.Point(535, 410);
+            this.Wyslij.Location = new System.Drawing.Point(521, 336);
             this.Wyslij.Name = "Wyslij";
-            this.Wyslij.Size = new System.Drawing.Size(67, 20);
+            this.Wyslij.Size = new System.Drawing.Size(67, 26);
             this.Wyslij.TabIndex = 3;
             this.Wyslij.Text = "Wyslij";
             this.Wyslij.UseVisualStyleBackColor = true;
@@ -77,9 +77,9 @@
             // OknoChat
             // 
             this.OknoChat.FormattingEnabled = true;
-            this.OknoChat.Location = new System.Drawing.Point(14, 38);
+            this.OknoChat.Location = new System.Drawing.Point(14, 25);
             this.OknoChat.Name = "OknoChat";
-            this.OknoChat.Size = new System.Drawing.Size(501, 290);
+            this.OknoChat.Size = new System.Drawing.Size(501, 303);
             this.OknoChat.TabIndex = 5;
             // 
             // label2
@@ -94,19 +94,19 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(660, 410);
+            this.button1.Location = new System.Drawing.Point(718, 339);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(73, 19);
+            this.button1.Size = new System.Drawing.Size(24, 23);
             this.button1.TabIndex = 7;
-            this.button1.Text = "Disconnect";
+            this.button1.Text = "⛔";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // PicSendBut
             // 
-            this.PicSendBut.Location = new System.Drawing.Point(545, 336);
+            this.PicSendBut.Location = new System.Drawing.Point(594, 336);
             this.PicSendBut.Name = "PicSendBut";
-            this.PicSendBut.Size = new System.Drawing.Size(86, 23);
+            this.PicSendBut.Size = new System.Drawing.Size(85, 26);
             this.PicSendBut.TabIndex = 8;
             this.PicSendBut.Text = "Wyślij zdjęcie";
             this.PicSendBut.UseVisualStyleBackColor = true;
@@ -120,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 442);
+            this.ClientSize = new System.Drawing.Size(754, 377);
             this.Controls.Add(this.PicSendBut);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
