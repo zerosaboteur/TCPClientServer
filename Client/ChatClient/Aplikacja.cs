@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace ChatClient
 {
@@ -22,9 +23,7 @@ namespace ChatClient
 
         public string zaptxt;
         public string recieve;
-        public String TextToSend;
-
-       // public Socket sck;
+        
         EndPoint IpEnd;
         EndPoint epSender;
         
@@ -38,8 +37,8 @@ namespace ChatClient
         public Aplikacja()
         {
             InitializeComponent();
-
-            //sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
+            //Proba nawiązania połączenia
             try
             {
                 client = new TcpClient();
@@ -48,13 +47,15 @@ namespace ChatClient
                 epSender = (EndPoint)IpEnd;
 
                 client.Connect(IPAddress.Parse(adres), int.Parse(port));
-                //sck.Connect(IpEnd);
-
+                
+                //ustawienie buffera, dla testów :) 
                 client.ReceiveBufferSize = 2000000;
-                //client.Client.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
+
+                //odpalenie słuchania w tle
                 Thread sluchanie = new Thread(receiveCallback);
                 sluchanie.Start();
 
+                //Sprawdzenie statusu połączenia, jesli pozytywnie to zmienia kolor
                 if (client.Connected)
                 {
                     label2.Text = "Połączony";
@@ -69,6 +70,7 @@ namespace ChatClient
 
         private void Wyslij_Click(object sender, EventArgs e)
         {
+            //Sprawdzenie czy kod nie zawiera złowa klucz
             if (PoleWiadomosc.Text.Contains("xrozxplik"))
             {
                 MessageBox.Show("Wiadomość nie może zawirać ciągu znaków xrozxplik");
@@ -77,14 +79,24 @@ namespace ChatClient
             {
                 if (czy_mozna_pisac == true)
                 {
-                    System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-                    byte[] msg = new byte[1500];
-                    msg = enc.GetBytes(PoleWiadomosc.Text);
-                    client.Client.Send(msg);
-                    zaptxt = PoleWiadomosc.Text;
-                    MessageBox.Show("" + zaptxt);
-                    PoleWiadomosc.Clear();
-                    OknoChat.Items.Add("Ty: " + zaptxt);
+                    try
+                    {
+                        //Zakodowanie wiadomości wysyłanej na serwer
+                        System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+                        byte[] msg = new byte[1500];
+                        msg = enc.GetBytes(PoleWiadomosc.Text);
+
+                        //Wysałanie wiadomości
+                        client.Client.Send(msg);
+                        zaptxt = PoleWiadomosc.Text;
+                        MessageBox.Show("" + zaptxt);
+                        PoleWiadomosc.Clear();
+                        OknoChat.Items.Add("Ty: " + zaptxt);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Nie jesteś połączony z serwerem");
+                    }
                 }
                 else
                 {
@@ -97,6 +109,7 @@ namespace ChatClient
         {
             try
             {
+                //odpowiednie dostosowanie czasu czekania do wielkości wysyłanego pliku
                 Thread.Sleep(time * 1000);
                 byte[] rec = new byte[client.ReceiveBufferSize];
                 client.Client.Receive(rec);
@@ -109,12 +122,14 @@ namespace ChatClient
                 }
                 else
                 {
+                    //Sprawdzenie czu uzyskiwana wiadomośc nie jest zdjęciem
                     MessageBox.Show("" + temp);
                     if (temp.Contains("PNG"))
                     {
                         File.WriteAllBytes("E:\\Projekty\\img.png", rec);
                         OknoObrazka.SizeMode = PictureBoxSizeMode.Zoom;
                         OknoObrazka.ImageLocation = "E:\\Projekty\\img.png";
+                        //odblokowanie możliwości pisania
                         czy_mozna_pisac = true;
                     }
                     else
@@ -127,7 +142,6 @@ namespace ChatClient
                             OknoChat.Items.Add("Znajomy: " + temp);
                         });
                     }
-                    //client.Client.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(receiveCallback), buffer);
                     time = 1;
                     Thread.Sleep(100);
                 }
@@ -191,6 +205,7 @@ namespace ChatClient
                     }
                     catch (IOException)
                     {
+                        MessageBox.Show("Nie jesteś połączony z serwerem");
                     }
                 }
             }
@@ -199,12 +214,26 @@ namespace ChatClient
                 MessageBox.Show("Poczekaj na wysłanie/odbiór obrazka");
             }
         }
-
+        //Odczenia (blokada) po wyslaniu obrazka, uzytkownik nie może wysłać kolejnego
         private void CzekajPoWyslaniuObrazka()
         {
             MessageBox.Show(""+rozmiar_zdjecia);
             Thread.Sleep(rozmiar_zdjecia * 1000);
             czy_mozna_pisac = true;
+        }
+
+        //Pozwalanie na przeciąganie okna
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+        private void Aplikacja_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
         }
     }
 }

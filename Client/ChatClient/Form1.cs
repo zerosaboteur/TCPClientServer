@@ -27,15 +27,22 @@ namespace ChatClient
         public Form1()
         {
             InitializeComponent();
+            this.BackColor = Color.FromArgb(5, 25, 30);
+            this.ForeColor = Color.FromArgb(255, 125, 0);
         }
 
-        private void Connect_Click(object sender, EventArgs e)
+        private void Aplikacja_Closing(object sender, FormClosingEventArgs e)
+        {
+            this.Show();
+        }
+
+        private void userControl11_Click(object sender, EventArgs e)
         {
             adres = AdresIP.Text;
-            port = Port.Text;
-            if (String.IsNullOrWhiteSpace(AdresIP.Text) || String.IsNullOrWhiteSpace(Port.Text))
+            port = Portt.Text;
+            if (String.IsNullOrWhiteSpace(AdresIP.Text) || String.IsNullOrWhiteSpace(Portt.Text))
             {
-                
+
             }
             else
             {
@@ -51,9 +58,9 @@ namespace ChatClient
             }
         }
 
-        private void Aplikacja_Closing(object sender, FormClosingEventArgs e)
+        private void userControl12_Click(object sender, EventArgs e)
         {
-            this.Show();
+            this.Close();
         }
     }
 }

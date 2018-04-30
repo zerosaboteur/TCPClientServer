@@ -12,11 +12,10 @@ namespace ChatClient
 {
     public partial class HackerMan : Form
     {
+
         public HackerMan()
         {
             InitializeComponent();
         }
-
-        
     }
 }

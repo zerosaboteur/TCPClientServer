@@ -1,0 +1,6 @@
+E:\Projekty\ChatClient\Client\CustomButton\bin\Debug\CustomButton.dll
+E:\Projekty\ChatClient\Client\CustomButton\bin\Debug\CustomButton.pdb
+E:\Projekty\ChatClient\Client\CustomButton\obj\Debug\CustomButton.csprojResolveAssemblyReference.cache
+E:\Projekty\ChatClient\Client\CustomButton\obj\Debug\CustomButton.csproj.CoreCompileInputs.cache
+E:\Projekty\ChatClient\Client\CustomButton\obj\Debug\CustomButton.dll
+E:\Projekty\ChatClient\Client\CustomButton\obj\Debug\CustomButton.pdb

@@ -71,8 +71,10 @@
             this.ClientSize = new System.Drawing.Size(380, 450);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "HackerMan";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "HackerMan";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -22,3 +22,5 @@ E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.csproj.GenerateRes
 E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.csproj.CoreCompileInputs.cache
 E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.exe
 E:\Projekty\ChatClient\Client\ChatClient\obj\Debug\ChatClient.pdb
+E:\Projekty\ChatClient\Client\ChatClient\bin\Debug\CustomButton.dll
+E:\Projekty\ChatClient\Client\ChatClient\bin\Debug\CustomButton.pdb

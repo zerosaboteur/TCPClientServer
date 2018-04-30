@@ -103,5 +103,26 @@
   <ItemGroup>
     <None Include="Resources\hacker.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomButton\CustomButton.csproj">
+      <Project>{D98A6581-28D6-48EF-B5B5-2F5DACCCBE69}</Project>
+      <Name>CustomButton</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\closebutton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sendimage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sendimage1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sendmessage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\buttonconnect.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

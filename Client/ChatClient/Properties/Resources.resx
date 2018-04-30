@@ -118,10 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="hacker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hacker.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sendimage1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sendimage1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="4d7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\4d7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="hacker" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hacker.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="sendmessage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sendmessage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="closebutton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\closebutton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sendimage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sendimage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="buttonconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\buttonconnect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
